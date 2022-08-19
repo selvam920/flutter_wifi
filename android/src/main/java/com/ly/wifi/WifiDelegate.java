@@ -28,6 +28,8 @@ import java.util.List;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.Log;
+
 
 public class
 WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
@@ -84,6 +86,14 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
         launchSSID();
     }
 
+    public void getMoran(MethodCall methodCall, MethodChannel.Result result) {
+        if (!setPendingMethodCallAndResult(methodCall, result)) {
+            finishWithAlreadyActiveError();
+            return;
+        }
+        launchMoran();
+    }
+
     public void getLevel(MethodCall methodCall, MethodChannel.Result result) {
         if (!setPendingMethodCallAndResult(methodCall, result)) {
             finishWithAlreadyActiveError();
@@ -100,6 +110,11 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
         } else {
             finishWithError("unavailable", "wifi name not available.");
         }
+    }
+
+    private void launchMoran() {
+            result.success("moran");
+            clearMethodCallAndResult();
     }
 
     private void launchLevel() {
@@ -127,6 +142,7 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
         }
         launchIP();
     }
+
 
     private void launchIP() {
         NetworkInfo info = ((ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
@@ -211,33 +227,50 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
     }
 
     public void connection(MethodCall methodCall, MethodChannel.Result result) {
+
+        Log.e("moran", "methodCall connect use delegate");
+
         if (!setPendingMethodCallAndResult(methodCall, result)) {
             finishWithAlreadyActiveError();
+
+            Log.e("moran", "methodCall connect use delegate: setPendingMethodCallAndResult");
             return;
         }
+
         if (!permissionManager.isPermissionGranted(Manifest.permission.CHANGE_WIFI_STATE)) {
             permissionManager.askForPermission(Manifest.permission.CHANGE_WIFI_STATE, REQUEST_ACCESS_FINE_LOCATION_PERMISSION);
+            Log.e("moran", "methodCall connect use delegate: permissionManager");
             return;
         }
         connection();
     }
 
-    private void connection() {
+    public void connection() {
+        Log.e("moran", "call connect use delegate");
+
         String ssid = methodCall.argument("ssid");
         String password = methodCall.argument("password");
-        WifiConfiguration wifiConfig = createWifiConfig(ssid, password);
+
+        Log.e("moran", "call connect use delegate params: "+ String.format("%s =>%s", ssid, password) );
+//        WifiConfiguration wifiConfig = createWifiConfig(ssid, password);
+        WifiConfiguration wifiConfig = CreateWifiInfo(ssid, password, 3);
         if (wifiConfig == null) {
             finishWithError("unavailable", "wifi config is null!");
+            Log.e("moran", "wifi config is null!");
             return;
         }
         int netId = wifiManager.addNetwork(wifiConfig);
+        Log.e("moran", "net id is: "+ String.format("%d!", netId));
         if (netId == -1) {
+            Log.e("moran", "net id is -1!");
             result.success(0);
             clearMethodCallAndResult();
         } else {
             // support Android O
             // https://stackoverflow.com/questions/50462987/android-o-wifimanager-enablenetwork-cannot-work
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+
+                Log.e("moran", "Build.VERSION.SDK_INT < Build.VERSION_CODES.O");
                 wifiManager.enableNetwork(netId, true);
                 wifiManager.reconnect();
                 result.success(1);
@@ -274,7 +307,7 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
 
     private WifiConfiguration isExist(WifiManager wifiManager, String ssid) {
         List<WifiConfiguration> existingConfigs = wifiManager.getConfiguredNetworks();
-        if(existingConfigs != null) {
+        if (existingConfigs != null) {
             for (WifiConfiguration existingConfig : existingConfigs) {
                 if (existingConfig.SSID.equals("\"" + ssid + "\"")) {
                     return existingConfig;
@@ -339,6 +372,9 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
         @Override
         public void onReceive(Context context, Intent intent) {
             NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+
+            Log.e("moran", "onReceive status" + String.format("%s", info.getState().toString()));
+
             if (info.getState() == NetworkInfo.State.DISCONNECTED && willLink) {
                 wifiManager.enableNetwork(netId, true);
                 wifiManager.reconnect();
@@ -353,5 +389,82 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
             willLink = true;
             wifiManager.disconnect();
         }
+
+        public void tunonWifi() {
+            if (!wifiManager.isWifiEnabled())
+                wifiManager.setWifiEnabled(true);
+        }
+
+        public void tunoffWifi() {
+            if (wifiManager.isWifiEnabled())
+                wifiManager.setWifiEnabled(false);
+        }
     }
+
+    public WifiConfiguration CreateWifiInfo(String SSID, String Password,
+                                            int Type) {
+        WifiConfiguration config = new WifiConfiguration();
+        config.allowedAuthAlgorithms.clear();
+        config.allowedGroupCiphers.clear();
+        config.allowedKeyManagement.clear();
+        config.allowedPairwiseCiphers.clear();
+        config.allowedProtocols.clear();
+        config.SSID = "\"" + SSID + "\"";
+
+        WifiConfiguration tempConfig = this.IsExsits(SSID);
+        if (tempConfig != null) {
+            wifiManager.removeNetwork(tempConfig.networkId);
+        }
+
+        if (Type == 1) // WIFICIPHER_NOPASS
+        {
+            config.wepKeys[0] = "";
+            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            config.wepTxKeyIndex = 0;
+        }
+        if (Type == 2) // WIFICIPHER_WEP
+        {
+            config.hiddenSSID = true;
+            config.wepKeys[0] = "\"" + Password + "\"";
+            config.allowedAuthAlgorithms
+                    .set(WifiConfiguration.AuthAlgorithm.SHARED);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+            config.allowedGroupCiphers
+                    .set(WifiConfiguration.GroupCipher.WEP104);
+            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            config.wepTxKeyIndex = 0;
+        }
+        if (Type == 3) // WIFICIPHER_WPA
+        {
+            config.preSharedKey = "\"" + Password + "\"";
+            config.hiddenSSID = true;
+            config.allowedAuthAlgorithms
+                    .set(WifiConfiguration.AuthAlgorithm.OPEN);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+            config.allowedPairwiseCiphers
+                    .set(WifiConfiguration.PairwiseCipher.TKIP);
+            // config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+            config.allowedPairwiseCiphers
+                    .set(WifiConfiguration.PairwiseCipher.CCMP);
+            config.status = WifiConfiguration.Status.ENABLED;
+        }
+        return config;
+    }
+
+    private WifiConfiguration IsExsits(String SSID) {
+        List<WifiConfiguration> existingConfigs = wifiManager
+                .getConfiguredNetworks();
+        for (WifiConfiguration existingConfig : existingConfigs) {
+            if (existingConfig.SSID.equals("\"" + SSID + "\"")) {
+                return existingConfig;
+            }
+        }
+        return null;
+    }
+
+
 }

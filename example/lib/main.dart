@@ -26,6 +26,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String _wifiName = 'click button to get wifi ssid.';
+  String _moran= 'click button to get moran.';
   int level = 0;
   String _ip = 'click button to get ip.';
   List<WifiResult> ssidList = [];
@@ -60,6 +61,19 @@ class _MyHomePageState extends State<MyHomePage> {
     if (index == 0) {
       return Column(
         children: [
+          Row(
+            children: <Widget>[
+              RaisedButton(
+                child: Text('moran'),
+                onPressed: _getMoran,
+              ),
+              Offstage(
+                offstage: level == 0,
+                child: Image.asset(level == 0 ? 'images/wifi1.png' : 'images/wifi$level.png', width: 28, height: 21),
+              ),
+              Text(_moran),
+            ],
+          ),
           Row(
             children: <Widget>[
               RaisedButton(
@@ -136,6 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Wifi.list('').then((list) {
       setState(() {
         ssidList = list;
+        print('$ssidList');
       });
     });
   }
@@ -149,6 +164,16 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<Null> _getMoran() async {
+    int l = await Wifi.level;
+    String wifiName = await Wifi.moran;
+    setState(() {
+      level = l;
+      _moran= wifiName;
+    });
+  }
+
+
   Future<Null> _getIP() async {
     String ip = await Wifi.ip;
     setState(() {
@@ -157,6 +182,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<Null> connection() async {
+    // var v = await Wifi.connection(ssid, password);
+    // print(v);
+
     Wifi.connection(ssid, password).then((v) {
       print(v);
     });

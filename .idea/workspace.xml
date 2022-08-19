@@ -15,142 +15,50 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c7eacce8-361a-426b-909f-bfdff1f38e62" name="Default" comment="">
+    <list default="true" id="c7eacce8-361a-426b-909f-bfdff1f38e62" name="Default" comment="support flutter 3.0,  safe.">
+      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiDelegate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/.idea/caches/build_file_checksums.ser" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiPlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/.idea/codeStyles/Project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/android/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/android/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/.idea/runConfigurations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/app/src/main/java/com/ly/wifiexample/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/main/java/com/ly/wifiexample/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/app/src/main/res/drawable/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/main/res/drawable/launch_background.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/src/main/res/values/styles.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/gradle.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/wifi.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/wifi.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wifi.iml" beforeDir="false" afterPath="$PROJECT_DIR$/wifi.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wifi_android.iml" beforeDir="false" afterPath="$PROJECT_DIR$/wifi_android.iml" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/.dart_tool/" />
-    <ignored path="$PROJECT_DIR$/.idea/" />
-    <ignored path="$PROJECT_DIR$/.pub/" />
-    <ignored path="$PROJECT_DIR$/build/" />
-    <ignored path="$PROJECT_DIR$/example/.pub/" />
-    <ignored path="$PROJECT_DIR$/example/build/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FUSProjectUsageTrigger">
-    <session id="1262913421">
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="dart" value="2" />
-          <entry key="md" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="Dart" value="2" />
-          <entry key="PLAIN_TEXT" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="md" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="PLAIN_TEXT" value="1" />
-        </counts>
-      </usages-collector>
-    </session>
-    <session id="-351255367">
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.closed" value="2" />
-          <entry key="project.open.time.12" value="1" />
-          <entry key="project.open.time.2" value="1" />
-          <entry key="project.opened" value="2" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="java" value="3" />
-          <entry key="md" value="1" />
-          <entry key="properties" value="1" />
-          <entry key="yaml" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="JAVA" value="3" />
-          <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Properties" value="1" />
-          <entry key="YAML" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="java" value="1" />
-          <entry key="properties" value="1" />
-          <entry key="yaml" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="JAVA" value="1" />
-          <entry key="Properties" value="1" />
-          <entry key="YAML" value="1" />
-        </counts>
-      </usages-collector>
-    </session>
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/wifi.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="795">
-              <caret line="55" selection-start-line="55" selection-end-line="55" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="34" column="20" selection-start-line="34" selection-start-column="20" selection-end-line="34" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/example/android/local.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="21" selection-start-line="4" selection-start-column="21" selection-end-line="4" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/pubspec.yaml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="13" lean-forward="true" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+  <component name="ComposerSettings">
+    <execution />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -161,6 +69,12 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="true" />
+  </component>
+  <component name="GoVcsConfiguration">
+    <option name="GO_FMT" value="false" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -182,13 +96,23 @@
       </list>
     </option>
   </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="i5ryv90o" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-47" />
     <option name="y" value="134" />
     <option name="width" value="1280" />
     <option name="height" value="709" />
   </component>
+  <component name="ProjectId" id="2DYNGAyimgPzcdexXoGhkFO9QM3" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectReloadState">
+    <option name="STATE" value="1" />
+  </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -238,13 +162,25 @@
       <pane id="PackagesPane" />
     </panes>
   </component>
-  <component name="PropertiesComponent">
-    <property name="dart.analysis.tool.window.force.activate" value="false" />
-    <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="flutter.settings" />
-    <property name="show.migrate.to.gradle.popup" value="false" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.go.format.on.save.advertiser.fired&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
+    &quot;ruby.rails.projectView.checked&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.CommitDialog&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/example/images" />
@@ -257,18 +193,6 @@
       <recent name="$PROJECT_DIR$/example" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
   <component name="RunManager">
     <configuration name="&lt;template&gt;" type="Applet" default="true" selected="false">
       <option name="MAIN_CLASS_NAME" />
@@ -279,22 +203,21 @@
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <option name="VM_PARAMETERS" />
     </configuration>
-    <configuration name="&lt;template&gt;" type="JUnit" default="true" selected="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-    </configuration>
-    <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
-      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
-    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="TestNG" factoryName="TestNG">
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <properties />
       <listeners />
@@ -302,7 +225,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file enabled="true" id="idea.log" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -313,6 +246,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1531299112750</updated>
+      <workItem from="1660871964084" duration="1047000" />
+      <workItem from="1660873387307" duration="144000" />
+      <workItem from="1660873555315" duration="40000" />
     </task>
     <task id="LOCAL-00001" summary="add list connection">
       <created>1531893506613</created>
@@ -418,10 +354,23 @@
       <window_info anchor="right" id="Theme Preview" order="8" />
     </layout>
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="add list connection" />
     <MESSAGE value="add iOS ip and connection" />
     <MESSAGE value="readme" />
@@ -429,7 +378,12 @@
     <MESSAGE value="iOS connection return true" />
     <MESSAGE value="iOS connection return WifiState" />
     <MESSAGE value="add signal strength" />
-    <option name="LAST_COMMIT_MESSAGE" value="add signal strength" />
+    <MESSAGE value="support flutter 3.0,  safe." />
+    <option name="LAST_COMMIT_MESSAGE" value="support flutter 3.0,  safe." />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>false</integration-enabled>
+    <settings-migrated>true</settings-migrated>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -437,7 +391,6 @@
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiDelegate.java</url>
           <line>175</line>
-          <properties />
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>

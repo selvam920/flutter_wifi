@@ -2,11 +2,14 @@ name: wifi
 description: Flutter plugin providing WiFi.
 author: Lewis <once10301@gmail.com>
 homepage: https://github.com/once10301/wifi
-version: 0.1.5
+version: 0.2.5
+
+
 
 dependencies:
   flutter:
     sdk: flutter
+
 
 flutter:
   plugin:
@@ -14,5 +17,5 @@ flutter:
     pluginClass: WifiPlugin
 
 environment:
-  sdk: ">=2.0.0-dev.28.0 <3.0.0"
-  flutter: ">=0.1.4 <2.0.0"
+  sdk: '>=2.10.0 <3.0.0'
+  flutter: ">=1.1.4 <2.17.0"

@@ -11,6 +11,10 @@ class Wifi {
     return await _channel.invokeMethod('ssid');
   }
 
+  static Future<String> get moran async {
+    return await _channel.invokeMethod('moran');
+  }
+
   static Future<int> get level async {
     return await _channel.invokeMethod('level');
   }
