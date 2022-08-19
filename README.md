@@ -11,7 +11,7 @@ iOS later released.
 Sample usage to check current status:
 
 ```dart
-import 'package:wifi/wifi.dart';
+import 'package:flutter_wifi/wifi.dart';
 
 String ssid = await Wifi.ssid;
 
