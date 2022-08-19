@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wifi/wifi.dart';
+import 'package:wifi/flutter_wifi.dart';
 
 void main() => runApp(new MyApp());
 
