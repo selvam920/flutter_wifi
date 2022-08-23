@@ -57,5 +57,7 @@
     <string>Your prompt</string>
     <key>NSRemindersUsageDescription</key>
     <string>Your prompt</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>
