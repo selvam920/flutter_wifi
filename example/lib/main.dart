@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Row(
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 child: Text('moran'),
                 onPressed: _getMoran,
               ),
@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Row(
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 child: Text('ssid'),
                 onPressed: _getWifiName,
               ),
@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Row(
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 child: Text('ip'),
                 onPressed: _getIP,
               ),
@@ -122,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
               password = value;
             },
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text('connection'),
             onPressed: connection,
           ),
