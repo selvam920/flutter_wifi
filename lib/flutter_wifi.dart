@@ -15,6 +15,18 @@ class Wifi {
     return await _channel.invokeMethod('moran');
   }
 
+  static Future<bool> get isEnable async {
+    return await _channel.invokeMethod('isEnable');
+  }
+
+
+  static Future<bool>  enableWifi(bool flag) async {
+    final Map<String, dynamic> params = {
+      'flag': flag,
+    };
+    return await _channel.invokeMethod('enableWifi', params);
+  }
+
   static Future<int> get level async {
     return await _channel.invokeMethod('level');
   }

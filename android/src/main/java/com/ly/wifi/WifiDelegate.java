@@ -94,6 +94,27 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
         launchMoran();
     }
 
+    public void isEnable(MethodCall methodCall, MethodChannel.Result result) {
+        if (!setPendingMethodCallAndResult(methodCall, result)) {
+            finishWithAlreadyActiveError();
+            return;
+        }
+        launchIsEnable();
+    }
+
+    public void enableWifi(MethodCall methodCall, MethodChannel.Result result) {
+        if (!setPendingMethodCallAndResult(methodCall, result)) {
+            finishWithAlreadyActiveError();
+            return;
+        }
+
+        boolean flag= methodCall.argument("flag");
+
+        launchEnableWifi(flag);
+    }
+
+
+
     public void getLevel(MethodCall methodCall, MethodChannel.Result result) {
         if (!setPendingMethodCallAndResult(methodCall, result)) {
             finishWithAlreadyActiveError();
@@ -115,6 +136,26 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
     private void launchMoran() {
             result.success("moran");
             clearMethodCallAndResult();
+    }
+
+    private void launchIsEnable() {
+        boolean ret = wifiManager.isWifiEnabled();
+        result.success(ret);
+        clearMethodCallAndResult();
+    }
+
+    private void launchEnableWifi(boolean flag) {
+        if (flag && !wifiManager.isWifiEnabled()){
+            wifiManager.setWifiEnabled(true);
+        }
+
+        if(!flag && wifiManager.isWifiEnabled()){
+            wifiManager.setWifiEnabled(false);
+        }
+
+        boolean ret = wifiManager.isWifiEnabled();
+        result.success(ret);
+        clearMethodCallAndResult();
     }
 
     private void launchLevel() {
@@ -253,7 +294,7 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
 
         Log.e("moran", "call connect use delegate params: "+ String.format("%s =>%s", ssid, password) );
 //        WifiConfiguration wifiConfig = createWifiConfig(ssid, password);
-        WifiConfiguration wifiConfig = CreateWifiInfo(ssid, password, 3);
+        WifiConfiguration wifiConfig = CreateWifiInfo(ssid, password, 2);
         if (wifiConfig == null) {
             finishWithError("unavailable", "wifi config is null!");
             Log.e("moran", "wifi config is null!");
@@ -416,7 +457,7 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
             wifiManager.removeNetwork(tempConfig.networkId);
         }
 
-        if (Type == 1) // WIFICIPHER_NOPASS
+        if (Type == 1) // WIFICIPHER_NOPASS  == open free
         {
             config.wepKeys[0] = "";
             config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
@@ -424,17 +465,21 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
         }
         if (Type == 2) // WIFICIPHER_WEP
         {
-            config.hiddenSSID = true;
-            config.wepKeys[0] = "\"" + Password + "\"";
-            config.allowedAuthAlgorithms
-                    .set(WifiConfiguration.AuthAlgorithm.SHARED);
-            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-            config.allowedGroupCiphers
-                    .set(WifiConfiguration.GroupCipher.WEP104);
+            // WEP Security
             config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            config.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+            config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
+            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+            wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+
+            if (getHexKey(Password)) config.wepKeys[0] = Password;
+            else config.wepKeys[0] = "\"" + Password + "\"";
             config.wepTxKeyIndex = 0;
+
         }
         if (Type == 3) // WIFICIPHER_WPA
         {
@@ -453,6 +498,33 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
             config.status = WifiConfiguration.Status.ENABLED;
         }
         return config;
+    }
+
+    /**
+     * WEP has two kinds of password, a hex value that specifies the key or
+     * a character string used to generate the real hex. This checks what kind of
+     * password has been supplied. The checks correspond to WEP40, WEP104 & WEP232
+     * @param s
+     * @return
+     */
+    private static boolean getHexKey(String s) {
+        if (s == null) {
+            return false;
+        }
+
+        int len = s.length();
+        if (len != 10 && len != 26 && len != 58) {
+            return false;
+        }
+
+        for (int i = 0; i < len; ++i) {
+            char c = s.charAt(i);
+            if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) {
+                continue;
+            }
+            return false;
+        }
+        return true;
     }
 
     private WifiConfiguration IsExsits(String SSID) {

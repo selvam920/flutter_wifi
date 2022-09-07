@@ -24,6 +24,13 @@ var result = await Wifi.connection('ssid', 'password');
 
 // only work on Android.
 List<WifiResult> list = await Wifi.list('key'); // this key is used to filter
+
+
+//append method
+isEnabled
+
+enableWifi(flag);
+
 ```
 When you use connection on iOS (iOS 11 only)
 

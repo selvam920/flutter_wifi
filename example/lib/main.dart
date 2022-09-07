@@ -26,11 +26,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String _wifiName = 'click button to get wifi ssid.';
-  String _moran= 'click button to get moran.';
+  String _moran = 'click button to get moran.';
   int level = 0;
   String _ip = 'click button to get ip.';
   List<WifiResult> ssidList = [];
   String ssid = '', password = '';
+  String _ssid='';
+  bool _enable = false;
+  TextEditingController _ssidCtl = new TextEditingController();
 
   @override
   void initState() {
@@ -64,12 +67,57 @@ class _MyHomePageState extends State<MyHomePage> {
           Row(
             children: <Widget>[
               ElevatedButton(
+                child: Text('wifi status'),
+                onPressed: () async {
+                  bool l = await Wifi.isEnable;
+                  setState(() {
+                    _enable = l;
+                  });
+                },
+              ),
+              Text(_enable ? 'on' : 'off'),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              ElevatedButton(
+                child: Text('enable wifi'),
+                onPressed: ()async{
+                  bool l = await Wifi.enableWifi(true);
+                  setState(() {
+                    _enable = l;
+                  });
+                },
+              ),
+              Text(_enable ? 'on' : 'off'),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              ElevatedButton(
+                child: Text('disable wifi'),
+                onPressed: ()async{
+                  bool l = await Wifi.enableWifi(false);
+                  setState(() {
+                    _enable = l;
+                  });
+                },
+              ),
+              Text(_enable ? 'on' : 'off'),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              ElevatedButton(
                 child: Text('moran'),
                 onPressed: _getMoran,
               ),
               Offstage(
                 offstage: level == 0,
-                child: Image.asset(level == 0 ? 'images/wifi1.png' : 'images/wifi$level.png', width: 28, height: 21),
+                child: Image.asset(
+                    level == 0 ? 'images/wifi1.png' : 'images/wifi$level.png',
+                    width: 28,
+                    height: 21),
               ),
               Text(_moran),
             ],
@@ -82,7 +130,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Offstage(
                 offstage: level == 0,
-                child: Image.asset(level == 0 ? 'images/wifi1.png' : 'images/wifi$level.png', width: 28, height: 21),
+                child: Image.asset(
+                    level == 0 ? 'images/wifi1.png' : 'images/wifi$level.png',
+                    width: 28,
+                    height: 21),
               ),
               Text(_wifiName),
             ],
@@ -97,6 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
           TextField(
+            controller: _ssidCtl,
             decoration: InputDecoration(
               border: UnderlineInputBorder(),
               filled: true,
@@ -105,6 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
               labelText: 'ssid',
             ),
             keyboardType: TextInputType.text,
+
             onChanged: (value) {
               ssid = value;
             },
@@ -131,7 +184,8 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       return Column(children: <Widget>[
         ListTile(
-          leading: Image.asset('images/wifi${ssidList[index - 1].level}.png', width: 28, height: 21),
+          leading: Image.asset('images/wifi${ssidList[index - 1].level}.png',
+              width: 28, height: 21),
           title: Text(
             ssidList[index - 1].ssid,
             style: TextStyle(
@@ -140,6 +194,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           dense: true,
+          onTap: (){
+
+            setState((){
+              _ssid = ssidList[index - 1].ssid;
+              ssid = _ssid;
+              _ssidCtl.text = _ssid;
+            });
+
+          },
         ),
         Divider(),
       ]);
@@ -169,10 +232,9 @@ class _MyHomePageState extends State<MyHomePage> {
     String wifiName = await Wifi.moran;
     setState(() {
       level = l;
-      _moran= wifiName;
+      _moran = wifiName;
     });
   }
-
 
   Future<Null> _getIP() async {
     String ip = await Wifi.ip;

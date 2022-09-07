@@ -109,6 +109,14 @@ public class WifiPlugin implements FlutterPlugin, ActivityAware, MethodCallHandl
             case "connection":
                 delegate.connection(call, result);
                 break;
+            case "isEnable":
+                delegate.isEnable(call, result);
+                break;
+            case "enableWifi":
+                delegate.enableWifi(call, result);
+                break;
+
+
             default:
                 result.notImplemented();
                 break;
