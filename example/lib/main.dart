@@ -109,8 +109,10 @@ class _MyHomePageState extends State<MyHomePage> {
           Row(
             children: <Widget>[
               ElevatedButton(
-                child: Text('moran'),
-                onPressed: _getMoran,
+                child: Text('wiwi list'),
+                onPressed: (){
+                  loadData();
+                },
               ),
               Offstage(
                 offstage: level == 0,
@@ -179,6 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Text('connection'),
             onPressed: connection,
           ),
+
         ],
       );
     } else {

@@ -28,17 +28,21 @@ import java.util.List;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.Log;
+
+import android.util.Log;
 
 
 public class
 WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
+    private static final String TAG = WifiDelegate.class.getSimpleName();
     private Activity activity;
     private WifiManager wifiManager;
     private PermissionManager permissionManager;
     private static final int REQUEST_ACCESS_FINE_LOCATION_PERMISSION = 1;
     private static final int REQUEST_CHANGE_WIFI_STATE_PERMISSION = 2;
     NetworkChangeReceiver networkReceiver;
+
+    private WifiAutoConnectManager wifiAuto; // 这个连接成功概率更大
 
     interface PermissionManager {
         boolean isPermissionGranted(String permissionName);
@@ -73,6 +77,7 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
         this.networkReceiver = new NetworkChangeReceiver();
         this.activity = activity;
         this.wifiManager = wifiManager;
+        this.wifiAuto = new WifiAutoConnectManager(wifiManager);
         this.result = result;
         this.methodCall = methodCall;
         this.permissionManager = permissionManager;
@@ -108,11 +113,10 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
             return;
         }
 
-        boolean flag= methodCall.argument("flag");
+        boolean flag = methodCall.argument("flag");
 
         launchEnableWifi(flag);
     }
-
 
 
     public void getLevel(MethodCall methodCall, MethodChannel.Result result) {
@@ -134,8 +138,8 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
     }
 
     private void launchMoran() {
-            result.success("moran");
-            clearMethodCallAndResult();
+        result.success("moran");
+        clearMethodCallAndResult();
     }
 
     private void launchIsEnable() {
@@ -145,11 +149,11 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
     }
 
     private void launchEnableWifi(boolean flag) {
-        if (flag && !wifiManager.isWifiEnabled()){
+        if (flag && !wifiManager.isWifiEnabled()) {
             wifiManager.setWifiEnabled(true);
         }
 
-        if(!flag && wifiManager.isWifiEnabled()){
+        if (!flag && wifiManager.isWifiEnabled()) {
             wifiManager.setWifiEnabled(false);
         }
 
@@ -269,274 +273,323 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
 
     public void connection(MethodCall methodCall, MethodChannel.Result result) {
 
-        Log.e("moran", "methodCall connect use delegate");
+        Log.d(TAG, "methodCall connect use delegate");
 
         if (!setPendingMethodCallAndResult(methodCall, result)) {
             finishWithAlreadyActiveError();
 
-            Log.e("moran", "methodCall connect use delegate: setPendingMethodCallAndResult");
+            Log.d(TAG, "methodCall connect use delegate: setPendingMethodCallAndResult");
             return;
         }
 
         if (!permissionManager.isPermissionGranted(Manifest.permission.CHANGE_WIFI_STATE)) {
             permissionManager.askForPermission(Manifest.permission.CHANGE_WIFI_STATE, REQUEST_ACCESS_FINE_LOCATION_PERMISSION);
-            Log.e("moran", "methodCall connect use delegate: permissionManager");
+            Log.d(TAG, "methodCall connect use delegate: permissionManager");
             return;
         }
-        connection();
+//        connection();
+        connection2();
     }
 
-    public void connection() {
-        Log.e("moran", "call connect use delegate");
+
+    public void connection2() {
+        Log.d(TAG, "call connect use delegate");
 
         String ssid = methodCall.argument("ssid");
         String password = methodCall.argument("password");
 
-        Log.e("moran", "call connect use delegate params: "+ String.format("%s =>%s", ssid, password) );
-//        WifiConfiguration wifiConfig = createWifiConfig(ssid, password);
-        WifiConfiguration wifiConfig = CreateWifiInfo(ssid, password, 2);
-        if (wifiConfig == null) {
-            finishWithError("unavailable", "wifi config is null!");
-            Log.e("moran", "wifi config is null!");
-            return;
-        }
-        int netId = wifiManager.addNetwork(wifiConfig);
-        Log.e("moran", "net id is: "+ String.format("%d!", netId));
-        if (netId == -1) {
-            Log.e("moran", "net id is -1!");
-            result.success(0);
-            clearMethodCallAndResult();
-        } else {
-            // support Android O
-            // https://stackoverflow.com/questions/50462987/android-o-wifimanager-enablenetwork-cannot-work
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        Log.d(TAG, "start call connect2 use delegate params: " + String.format("%s =>%s", ssid, password));
+        wifiAuto.connect(ssid, password, WifiAutoConnectManager.WifiCipherType.WIFICIPHER_WPA);
+    }
 
-                Log.e("moran", "Build.VERSION.SDK_INT < Build.VERSION_CODES.O");
-                wifiManager.enableNetwork(netId, true);
-                wifiManager.reconnect();
-                result.success(1);
+        public void connection () {
+            Log.d(TAG, "call connect use delegate");
+
+            String ssid = methodCall.argument("ssid");
+            String password = methodCall.argument("password");
+
+
+            Log.d(TAG, "call connect use delegate params: " + String.format("%s =>%s", ssid, password));
+//        WifiConfiguration wifiConfig = createWifiConfig(ssid, password);
+            WifiConfiguration wifiConfig = CreateWifiInfo(ssid, password, 3);
+            if (wifiConfig == null) {
+                finishWithError("unavailable", "wifi config is null!");
+                Log.d(TAG, "wifi config is null!");
+                return;
+            }
+            int netId = wifiManager.addNetwork(wifiConfig);
+            Log.d(TAG, "net id is: " + String.format("%d!", netId));
+            if (netId == -1) {// 可能是曾过来的wifi
+                Log.d(TAG, "net id is -1!");
+
+                connectWifi(ssid);
+
+                result.success(0);
                 clearMethodCallAndResult();
             } else {
-                networkReceiver.connect(netId);
+                // support Android O
+                // https://stackoverflow.com/questions/50462987/android-o-wifimanager-enablenetwork-cannot-work
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+
+                    Log.d(TAG, "Build.VERSION.SDK_INT < Build.VERSION_CODES.O");
+                    wifiManager.enableNetwork(netId, true);
+                    wifiManager.reconnect();
+
+                    result.success(1);
+                    clearMethodCallAndResult();
+                } else {
+                    networkReceiver.connect(netId);
+                }
             }
         }
-    }
 
-    private WifiConfiguration createWifiConfig(String ssid, String Password) {
-        WifiConfiguration config = new WifiConfiguration();
-        config.SSID = "\"" + ssid + "\"";
-        config.allowedAuthAlgorithms.clear();
-        config.allowedGroupCiphers.clear();
-        config.allowedKeyManagement.clear();
-        config.allowedPairwiseCiphers.clear();
-        config.allowedProtocols.clear();
-        WifiConfiguration tempConfig = isExist(wifiManager, ssid);
-        if (tempConfig != null) {
-            wifiManager.removeNetwork(tempConfig.networkId);
+        private WifiConfiguration createWifiConfig (String ssid, String Password){
+            WifiConfiguration config = new WifiConfiguration();
+            config.SSID = "\"" + ssid + "\"";
+            config.allowedAuthAlgorithms.clear();
+            config.allowedGroupCiphers.clear();
+            config.allowedKeyManagement.clear();
+            config.allowedPairwiseCiphers.clear();
+            config.allowedProtocols.clear();
+            WifiConfiguration tempConfig = isExist(wifiManager, ssid);
+            if (tempConfig != null) {
+                wifiManager.removeNetwork(tempConfig.networkId);
+            }
+            config.preSharedKey = "\"" + Password + "\"";
+            config.hiddenSSID = true;
+            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+            config.status = WifiConfiguration.Status.ENABLED;
+            return config;
         }
-        config.preSharedKey = "\"" + Password + "\"";
-        config.hiddenSSID = true;
-        config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-        config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-        config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-        config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-        config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-        config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-        config.status = WifiConfiguration.Status.ENABLED;
-        return config;
-    }
 
-    private WifiConfiguration isExist(WifiManager wifiManager, String ssid) {
-        List<WifiConfiguration> existingConfigs = wifiManager.getConfiguredNetworks();
-        if (existingConfigs != null) {
+        private WifiConfiguration isExist (WifiManager wifiManager, String ssid){
+            List<WifiConfiguration> existingConfigs = wifiManager.getConfiguredNetworks();
+            if (existingConfigs != null) {
+                for (WifiConfiguration existingConfig : existingConfigs) {
+                    if (existingConfig.SSID.equals("\"" + ssid + "\"")) {
+                        return existingConfig;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private boolean setPendingMethodCallAndResult (MethodCall methodCall, MethodChannel.Result
+        result){
+            if (this.result != null) {
+                return false;
+            }
+            this.methodCall = methodCall;
+            this.result = result;
+            return true;
+        }
+
+        @Override
+        public boolean onRequestPermissionsResult ( int requestCode, String[] permissions,
+        int[] grantResults){
+            boolean permissionGranted = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+            switch (requestCode) {
+                case REQUEST_ACCESS_FINE_LOCATION_PERMISSION:
+                    if (permissionGranted) {
+                        launchWifiList();
+                    }
+                    break;
+                case REQUEST_CHANGE_WIFI_STATE_PERMISSION:
+                    if (permissionGranted) {
+                        connection();
+                    }
+                    break;
+                default:
+                    return false;
+            }
+            if (!permissionGranted) {
+                clearMethodCallAndResult();
+            }
+            return true;
+        }
+
+        private void finishWithAlreadyActiveError () {
+            finishWithError("already_active", "wifi is already active");
+        }
+
+        private void finishWithError (String errorCode, String errorMessage){
+            result.error(errorCode, errorMessage, null);
+            clearMethodCallAndResult();
+        }
+
+        private void clearMethodCallAndResult () {
+            methodCall = null;
+            result = null;
+        }
+
+        // support Android O
+        // https://stackoverflow.com/questions/50462987/android-o-wifimanager-enablenetwork-cannot-work
+        public class NetworkChangeReceiver extends BroadcastReceiver {
+            private int netId;
+            private boolean willLink = false;
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+
+                Log.d(TAG, "onReceive status" + String.format("%s", info.getState().toString()));
+
+                if (info.getState() == NetworkInfo.State.DISCONNECTED && willLink) {
+                    wifiManager.enableNetwork(netId, true);
+                    wifiManager.reconnect();
+                    result.success(1);
+                    willLink = false;
+                    clearMethodCallAndResult();
+                }
+            }
+
+            public void connect(int netId) {
+                this.netId = netId;
+                willLink = true;
+                wifiManager.disconnect();
+            }
+
+            public void tunonWifi() {
+                if (!wifiManager.isWifiEnabled())
+                    wifiManager.setWifiEnabled(true);
+            }
+
+            public void tunoffWifi() {
+                if (wifiManager.isWifiEnabled())
+                    wifiManager.setWifiEnabled(false);
+            }
+        }
+
+        public WifiConfiguration CreateWifiInfo (String SSID, String Password,
+        int Type){
+            WifiConfiguration config = new WifiConfiguration();
+            config.allowedAuthAlgorithms.clear();
+            config.allowedGroupCiphers.clear();
+            config.allowedKeyManagement.clear();
+            config.allowedPairwiseCiphers.clear();
+            config.allowedProtocols.clear();
+            config.SSID = "\"" + SSID + "\"";
+
+            WifiConfiguration tempConfig = this.IsExsits(SSID);
+            if (tempConfig != null) {
+                wifiManager.removeNetwork(tempConfig.networkId);
+            }
+
+            if (Type == 1) // WIFICIPHER_NOPASS  == open free
+            {
+                config.wepKeys[0] = "";
+                config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+                config.wepTxKeyIndex = 0;
+            }
+            if (Type == 2) // WIFICIPHER_WEP
+            {
+                // WEP Security
+                config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+                config.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+                config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+                config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+                config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
+                config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+                config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+                config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+                config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+
+                if (getHexKey(Password)) config.wepKeys[0] = Password;
+                else config.wepKeys[0] = "\"" + Password + "\"";
+                config.wepTxKeyIndex = 0;
+
+            }
+            if (Type == 3) // WIFICIPHER_WPA
+            {
+                config.preSharedKey = "\"" + Password + "\"";
+                config.hiddenSSID = true;
+                config.allowedAuthAlgorithms
+                        .set(WifiConfiguration.AuthAlgorithm.OPEN);
+                config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+                config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+                config.allowedPairwiseCiphers
+                        .set(WifiConfiguration.PairwiseCipher.TKIP);
+                // config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+                config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+                config.allowedPairwiseCiphers
+                        .set(WifiConfiguration.PairwiseCipher.CCMP);
+                config.status = WifiConfiguration.Status.ENABLED;
+            }
+            return config;
+        }
+
+//    连接曾连过的wifi
+        public void connectWifi (String ssid){
+            WifiConfiguration configuration = getWifiConfig(ssid);
+            if (configuration != null) {
+                wifiManager.disconnect();
+                wifiManager.enableNetwork(configuration.networkId, true);
+            }
+
+        }
+        public WifiConfiguration getWifiConfig (String ssid){
+
+            if (ssid != null && ssid != "") {
+                return null;
+            }
+            String newSSID;
+            if (!(ssid.startsWith("\"") && ssid.endsWith("\""))) {
+                newSSID = "\"" + ssid + "\"";
+            } else {
+                newSSID = ssid;
+            }
+            List<WifiConfiguration> configuredNetworks = wifiManager.getConfiguredNetworks();
+
+            for (WifiConfiguration configuration : configuredNetworks) {
+                if (newSSID.equalsIgnoreCase(configuration.SSID)) {
+                    return configuration;
+                }
+            }
+
+            return null;
+        }
+        /**
+         * WEP has two kinds of password, a hex value that specifies the key or
+         * a character string used to generate the real hex. This checks what kind of
+         * password has been supplied. The checks correspond to WEP40, WEP104 & WEP232
+         * @param s
+         * @return
+         */
+        private static boolean getHexKey (String s){
+            if (s == null) {
+                return false;
+            }
+
+            int len = s.length();
+            if (len != 10 && len != 26 && len != 58) {
+                return false;
+            }
+
+            for (int i = 0; i < len; ++i) {
+                char c = s.charAt(i);
+                if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) {
+                    continue;
+                }
+                return false;
+            }
+            return true;
+        }
+
+        private WifiConfiguration IsExsits (String SSID){
+            List<WifiConfiguration> existingConfigs = wifiManager
+                    .getConfiguredNetworks();
             for (WifiConfiguration existingConfig : existingConfigs) {
-                if (existingConfig.SSID.equals("\"" + ssid + "\"")) {
+                if (existingConfig.SSID.equals("\"" + SSID + "\"")) {
                     return existingConfig;
                 }
             }
+            return null;
         }
-        return null;
+
+
     }
-
-    private boolean setPendingMethodCallAndResult(MethodCall methodCall, MethodChannel.Result result) {
-        if (this.result != null) {
-            return false;
-        }
-        this.methodCall = methodCall;
-        this.result = result;
-        return true;
-    }
-
-    @Override
-    public boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        boolean permissionGranted = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
-        switch (requestCode) {
-            case REQUEST_ACCESS_FINE_LOCATION_PERMISSION:
-                if (permissionGranted) {
-                    launchWifiList();
-                }
-                break;
-            case REQUEST_CHANGE_WIFI_STATE_PERMISSION:
-                if (permissionGranted) {
-                    connection();
-                }
-                break;
-            default:
-                return false;
-        }
-        if (!permissionGranted) {
-            clearMethodCallAndResult();
-        }
-        return true;
-    }
-
-    private void finishWithAlreadyActiveError() {
-        finishWithError("already_active", "wifi is already active");
-    }
-
-    private void finishWithError(String errorCode, String errorMessage) {
-        result.error(errorCode, errorMessage, null);
-        clearMethodCallAndResult();
-    }
-
-    private void clearMethodCallAndResult() {
-        methodCall = null;
-        result = null;
-    }
-
-    // support Android O
-    // https://stackoverflow.com/questions/50462987/android-o-wifimanager-enablenetwork-cannot-work
-    public class NetworkChangeReceiver extends BroadcastReceiver {
-        private int netId;
-        private boolean willLink = false;
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-
-            Log.e("moran", "onReceive status" + String.format("%s", info.getState().toString()));
-
-            if (info.getState() == NetworkInfo.State.DISCONNECTED && willLink) {
-                wifiManager.enableNetwork(netId, true);
-                wifiManager.reconnect();
-                result.success(1);
-                willLink = false;
-                clearMethodCallAndResult();
-            }
-        }
-
-        public void connect(int netId) {
-            this.netId = netId;
-            willLink = true;
-            wifiManager.disconnect();
-        }
-
-        public void tunonWifi() {
-            if (!wifiManager.isWifiEnabled())
-                wifiManager.setWifiEnabled(true);
-        }
-
-        public void tunoffWifi() {
-            if (wifiManager.isWifiEnabled())
-                wifiManager.setWifiEnabled(false);
-        }
-    }
-
-    public WifiConfiguration CreateWifiInfo(String SSID, String Password,
-                                            int Type) {
-        WifiConfiguration config = new WifiConfiguration();
-        config.allowedAuthAlgorithms.clear();
-        config.allowedGroupCiphers.clear();
-        config.allowedKeyManagement.clear();
-        config.allowedPairwiseCiphers.clear();
-        config.allowedProtocols.clear();
-        config.SSID = "\"" + SSID + "\"";
-
-        WifiConfiguration tempConfig = this.IsExsits(SSID);
-        if (tempConfig != null) {
-            wifiManager.removeNetwork(tempConfig.networkId);
-        }
-
-        if (Type == 1) // WIFICIPHER_NOPASS  == open free
-        {
-            config.wepKeys[0] = "";
-            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-            config.wepTxKeyIndex = 0;
-        }
-        if (Type == 2) // WIFICIPHER_WEP
-        {
-            // WEP Security
-            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-            config.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
-            config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
-            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
-            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-            wifiConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
-
-            if (getHexKey(Password)) config.wepKeys[0] = Password;
-            else config.wepKeys[0] = "\"" + Password + "\"";
-            config.wepTxKeyIndex = 0;
-
-        }
-        if (Type == 3) // WIFICIPHER_WPA
-        {
-            config.preSharedKey = "\"" + Password + "\"";
-            config.hiddenSSID = true;
-            config.allowedAuthAlgorithms
-                    .set(WifiConfiguration.AuthAlgorithm.OPEN);
-            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-            config.allowedPairwiseCiphers
-                    .set(WifiConfiguration.PairwiseCipher.TKIP);
-            // config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
-            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            config.allowedPairwiseCiphers
-                    .set(WifiConfiguration.PairwiseCipher.CCMP);
-            config.status = WifiConfiguration.Status.ENABLED;
-        }
-        return config;
-    }
-
-    /**
-     * WEP has two kinds of password, a hex value that specifies the key or
-     * a character string used to generate the real hex. This checks what kind of
-     * password has been supplied. The checks correspond to WEP40, WEP104 & WEP232
-     * @param s
-     * @return
-     */
-    private static boolean getHexKey(String s) {
-        if (s == null) {
-            return false;
-        }
-
-        int len = s.length();
-        if (len != 10 && len != 26 && len != 58) {
-            return false;
-        }
-
-        for (int i = 0; i < len; ++i) {
-            char c = s.charAt(i);
-            if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) {
-                continue;
-            }
-            return false;
-        }
-        return true;
-    }
-
-    private WifiConfiguration IsExsits(String SSID) {
-        List<WifiConfiguration> existingConfigs = wifiManager
-                .getConfiguredNetworks();
-        for (WifiConfiguration existingConfig : existingConfigs) {
-            if (existingConfig.SSID.equals("\"" + SSID + "\"")) {
-                return existingConfig;
-            }
-        }
-        return null;
-    }
-
-
-}
