@@ -7,12 +7,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkRequest;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.net.NetworkSpecifier;
+import android.net.NetworkCapabilities;
+import android.net.wifi.WifiNetworkSpecifier;
+import android.net.wifi.WifiNetworkSuggestion;
 import android.os.Build;
+import android.os.PatternMatcher;
 
 import androidx.core.app.ActivityCompat;
 
@@ -30,6 +37,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 
 import android.util.Log;
+import com.ly.permission.*;
 
 
 public class
@@ -287,12 +295,90 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
             Log.d(TAG, "methodCall connect use delegate: permissionManager");
             return;
         }
-//        connection();
-        connection2();
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                PermissionAnywhere.requestPermission(new String[]{
+                                Manifest.permission.ACCESS_WIFI_STATE,
+                                Manifest.permission.CHANGE_WIFI_STATE,
+                                Manifest.permission.WRITE_SETTINGS,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.CHANGE_NETWORK_STATE,
+                                Manifest.permission.CHANGE_WIFI_MULTICAST_STATE
+                        }
+                        , new PermissionCallback() {
+                            @Override
+                            public void onComplete(List<String> grantedPermissions, List<String> deniedPermissions, List<String> alwaysDeniedPermissions) {
+                                System.out.println("onPermissionGranted" + grantedPermissions.toString());
+                                System.out.println("onPermissionDenied" + deniedPermissions.toString());
+                                System.out.println("onPermissionAlwaysDenied" + alwaysDeniedPermissions.toString());
+
+                                System.out.println("onComplete");
+
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                    connV29();
+                                }
+                                else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                                    connV23();
+                                }else{
+                                    connection();
+                                }
+
+                            }
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else { // version < 6.0
+            connection();
+        }
+
     }
 
 
-    public void connection2() {
+    public void connV29() {
+        String ssid = methodCall.argument("ssid");
+        String password = methodCall.argument("password");
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            NetworkSpecifier specifier =
+                    new WifiNetworkSpecifier.Builder()
+                            .setSsidPattern(new PatternMatcher(ssid, PatternMatcher.PATTERN_PREFIX))
+                            .setWpa2Passphrase(password)
+                            .build();
+
+            NetworkRequest request =
+                    new NetworkRequest.Builder()
+                            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                            .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                            .setNetworkSpecifier(specifier)
+                            .build();
+
+            ConnectivityManager connectivityManager = (ConnectivityManager)
+                    activity.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+                @Override
+                public void onAvailable(Network network) {
+                    // do success processing here..
+                    //conn success
+                }
+
+                @Override
+                public void onUnavailable() {
+                    // do failure processing here..
+                    //conn fail
+                }
+            };
+            connectivityManager.requestNetwork(request, networkCallback);
+            // Release the request when done.
+            // connectivityManager.unregisterNetworkCallback(networkCallback);
+        }
+    }
+
+
+    public void connV23() {
         Log.d(TAG, "call connect use delegate");
 
         String ssid = methodCall.argument("ssid");
