@@ -5,20 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="378d94c7-1955-481d-a278-de419440241c" name="Changes" comment="wifi append method;">
-      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/ly/permission/FragmentAttachCallback.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/ly/permission/PermissionAnywhere.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/ly/permission/PermissionCallback.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/src/main/java/com/ly/permission/PermissionFragment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example/android/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/flutter_wifi.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/flutter_wifi.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiDelegate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/.idea/caches/gradle_models.ser" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/app/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,16 +30,12 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://D:/sdk/flutter_windows/flutter/bin/cache/pkg/sky_engine/lib/async/schedule_microtask.dart" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/example/android/app/src/main/java/com/ly/wifiexample/MainActivity.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/example/lib/main.dart" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiPlugin.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiDelegate.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://D:/sdk/flutter_windows/flutter/bin/cache/pkg/sky_engine/lib/async/zone.dart" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/lib/flutter_wifi.dart" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://D:/sdk/flutter_windows/flutter/packages/flutter/lib/src/services/platform_channel.dart" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiUtils.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://D:/sdk/flutter_windows/flutter/bin/cache/pkg/sky_engine/lib/core/errors.dart" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiPlugin.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/example/lib/main.dart" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/android/src/main/java/com/ly/wifi/WifiDelegate.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/example/android/app/src/main/java/com/ly/wifiexample/MainActivity.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="6qfn9k7y" />
