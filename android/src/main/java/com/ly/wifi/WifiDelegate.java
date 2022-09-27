@@ -363,12 +363,22 @@ WifiDelegate implements PluginRegistry.RequestPermissionsResultListener {
                 public void onAvailable(Network network) {
                     // do success processing here..
                     //conn success
+                    try{
+                        result.success(1);
+                    }catch (Exception e){
+
+                    }
                 }
 
                 @Override
                 public void onUnavailable() {
                     // do failure processing here..
                     //conn fail
+                    try{
+                        result.success(0);
+                    }catch (Exception e){
+
+                    }
                 }
             };
             connectivityManager.requestNetwork(request, networkCallback);
